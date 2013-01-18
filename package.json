@@ -1,0 +1,16 @@
+{
+  "name": "censvs-sessions",
+  "version": "0.1.0",
+  "description": "Censvs client-side session handler",
+  "dependencies": {
+    "coffee-script": "~1.1.2",
+    "es5-shimify": "~0.0.1",
+    "json2ify": "~0.0.1",
+    "jqueryify": "~0.0.1",
+    "grunt": "0.4.0rc4",
+    "grunt-contrib-coffee": "~0.3.1",
+    "grunt-contrib": "~0.2.0"
+  }
+}
+
+

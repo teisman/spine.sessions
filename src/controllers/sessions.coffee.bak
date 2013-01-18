@@ -1,0 +1,85 @@
+$ = jQuery
+
+response_session = 
+  access_token: '274484'
+  is_authenticated: false
+  user: {}
+
+response_login = 
+  access_token: '274485'
+  is_authenticated: true
+  user: {
+    name: 'Mark'    
+  }
+
+class SessionInstance extends Spine.Controller
+  events:
+    'submit #form-login': 'login'
+    'click .logout': 'logout'
+
+  constructor: ->
+    super
+    @validate()
+
+  validate: ->
+    item = @item
+    data =
+      access_token: item.access_token
+    $.mockjax
+      url: '/sessions'
+      responseText : response_session
+    $.getJSON '/sessions', data, (response) ->
+      item.updateAttributes response
+      window.authenticated = item.authenticated()
+      alert "authenticated: #{window.authenticated}"
+    $.mockjaxClear()
+
+  login: (e) =>
+    e.preventDefault()
+    item = @item
+    data = $(e.target).serializeArray()
+    $.mockjax
+      url: '/sessions'
+      responseText : response_login
+    $.post '/sessions', data, ((response) ->
+      item.updateAttributes response
+      window.authenticated = item.authenticated()
+      alert "authenticated: #{window.authenticated}"
+      ), 'json'
+    $.mockjaxClear()
+
+  logout: (e) =>
+    e.preventDefault()
+    $.mockjax
+      url: '/sessions'
+      responseText : response_session
+    Session.each (session) ->
+      $.ajax(
+        type: 'DELETE'
+        url: '/sessions'
+        data:
+          access_token: session.access_token
+        success: (response) =>
+          delete window.authenticated
+          session.destroy()
+        error: (err) =>
+          @log err
+        )
+    $.mockjaxClear()
+    @item = Session.create()
+    @validate()
+    
+
+class Sessions extends Spine.Controller
+  constructor: ->
+    super
+    Session.bind 'refresh', @initialize
+    Session.fetch()
+
+  initialize: ->
+    Session.deleteAll() if Session.count() isnt 1
+    session = Session.first() ? Session.create()
+    new SessionInstance(item:session, el:$('#main'))
+
+$ ->
+  new Sessions()
