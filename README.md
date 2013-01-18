@@ -5,6 +5,6 @@ spine.sessions is a javascript application that allowing the client-side trackin
 ##Usage
 1. Checkout the Git repository: `git clone git://github.com/Teisman/spine.sessions.git` 
 2. Install npm dependencies: `npm install .`
-4. Compile **lib/javascript.js** using Gruntfile: `grunt` 
+4. Compile **lib/application.js** using Gruntfile: `grunt` 
 5. Open **index.html** for demonstration
 
